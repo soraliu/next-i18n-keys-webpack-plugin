@@ -26,7 +26,6 @@ const getReplacedSource = ({ sourceAsset, matchReg, replacement }) => {
     const start = match.index;
     const end = start + matchedStr.length;
 
-    console.log('replaced', start, end, replacement);
     replaceSource.replace(start, end, replacement);
   });
 
@@ -45,7 +44,7 @@ class NextI18nKeysWebpackPlugin {
 
     const options = {
       func: {
-        list: funcList || ['getLabel'],
+        list: funcList || ['i18next.t', 'i18n.t'],
       },
       keySeparator: false,
       nsSeparator: ':',
