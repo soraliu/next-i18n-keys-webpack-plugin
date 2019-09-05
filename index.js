@@ -3,6 +3,8 @@ const matchAll = require('string.prototype.matchall');
 const { ReplaceSource } = require('webpack-sources');
 
 const extractI18nKeysBySource = (source, options) => {
+  if (!source) return [];
+
   const parser = new Parser(options);
 
   const data = new Set();
@@ -67,7 +69,12 @@ class NextI18nKeysWebpackPlugin {
             .filter(chunk => chunk.type !== 'javascript/dynamic')
             .filter(({ id }) => !/node_modules\//.test(id))
 
-          const keys = modules.map(({ _source: { _value } }) => extractI18nKeysBySource(_value, this.scannerOptions)).reduce((a, b) => a.concat(b), []);
+          const keys = modules.map(({ _source }) => {
+            if (!_source) return [];
+
+            const { _value } = _source;
+            return extractI18nKeysBySource(_value, this.scannerOptions).reduce((a, b) => a.concat(b), []);
+          });
           const replacement = JSON.stringify(keys);
 
           const sourceAsset = compilation.assets[filename];
