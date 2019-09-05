@@ -1,0 +1,14 @@
+{
+  "name": "next-i18n-keys-webpack-plugin",
+  "version": "1.0.0",
+  "description": "auto generate i18n keys",
+  "main": "index.js",
+  "repository": "https://git.toolsfdg.net/sora-liu/next-i18n-keys-webpack-plugin.git",
+  "author": "Sora Liu <475212506@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "i18next-scanner": "^2.10.2",
+    "string.prototype.matchall": "^3.0.1",
+    "webpack-sources": "^1.4.3"
+  }
+}
