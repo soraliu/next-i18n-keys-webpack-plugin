@@ -1,5 +1,5 @@
 {
-  "name": "next-i18n-keys-webpack-plugin",
+  "name": "next-i18n-keys",
   "version": "1.0.0",
   "description": "auto generate next page's i18n keys",
   "main": "index.js",
