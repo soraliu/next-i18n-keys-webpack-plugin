@@ -15,7 +15,7 @@ const extractI18nKeysBySource = (source, options) => {
   return Array.from(data);
 }
 
-const getReplacedSource = ({ sourceAsset, matchReg, replacement }) => {
+const getReplacedSource = ({ sourceAsset, matchReg, replacement, log }) => {
   const replaceSource = new ReplaceSource(sourceAsset);
   const source = sourceAsset.source();
 
@@ -29,6 +29,12 @@ const getReplacedSource = ({ sourceAsset, matchReg, replacement }) => {
     const end = start + matchedStr.length;
 
     replaceSource.replace(start, end, replacement);
+
+    if (log) {
+      console.log('next i18n keys log: ');
+      console.log('matched string: ', matchedStr);
+      console.log('replacement: ', replacement);
+    }
   });
 
   return replaceSource;
@@ -41,6 +47,7 @@ class NextI18nKeysWebpackPlugin {
   constructor({
     matchReg,
     funcList,
+    log,
   } = {}) {
     this.matchReg = matchReg || /'\^__I18N_KEYS__\$'/;
 
@@ -59,6 +66,7 @@ class NextI18nKeysWebpackPlugin {
       lngs: ['en'],
     };
     this.scannerOptions = options;
+    this.log = log || false;
   }
 
   apply(compiler) {
@@ -73,13 +81,14 @@ class NextI18nKeysWebpackPlugin {
             if (!_source) return [];
 
             const { _value } = _source;
-            return extractI18nKeysBySource(_value, this.scannerOptions).reduce((a, b) => a.concat(b), []);
-          });
+            return extractI18nKeysBySource(_value, this.scannerOptions);
+          }).reduce((a, b) => a.concat(b), []);
           const replacement = JSON.stringify(keys);
 
           const sourceAsset = compilation.assets[filename];
           const matchReg = this.matchReg;
-          compilation.assets[filename] = getReplacedSource({ sourceAsset, matchReg, replacement });
+          const log = this.log;
+          compilation.assets[filename] = getReplacedSource({ sourceAsset, matchReg, replacement, log });
         }
       });
     });
